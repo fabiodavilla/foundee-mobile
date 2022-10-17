@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:foundee/components/create_field.dart';
+import 'package:foundee_mobile/components/create_field.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddNewPointScreen extends StatefulWidget {
   const AddNewPointScreen({Key? key}) : super(key: key);
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   State<AddNewPointScreen> createState() => _AddNewPointScreenState();
 }
 
 class _AddNewPointScreenState extends State<AddNewPointScreen> {
+  final _formKey = GlobalKey<FormState>();
   final List<Widget> _imageList = [];
   final ImagePicker _picker = ImagePicker();
   List<XFile>? photos;
@@ -40,7 +40,7 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: AddNewPointScreen._formKey,
+          key: _formKey,
           child: Column(
             children: [
               Padding(
@@ -56,11 +56,11 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
                             center: arguments,
                             zoom: 15.0,
                           ),
-                          layers: [
-                            TileLayerOptions(
+                          children: [
+                            TileLayer(
                               urlTemplate:
-                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                              subdomains: ['a', 'b', 'c'],
+                                  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              // subdomains: ['a', 'b', 'c'],
                             ),
                           ],
                         ),

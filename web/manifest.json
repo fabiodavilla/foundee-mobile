@@ -1,6 +1,6 @@
 {
-    "name": "foundee",
-    "short_name": "foundee",
+    "name": "foundee_mobile",
+    "short_name": "foundee_mobile",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

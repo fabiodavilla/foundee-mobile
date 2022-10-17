@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee/screens/login/login_request.dart';
-import 'package:foundee/services/entities/login.dart';
+import 'package:foundee_mobile/screens/login/login_request.dart';
+import 'package:foundee_mobile/services/entities/login.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
   final TextEditingController emailController = TextEditingController();
@@ -99,8 +99,10 @@ class LoginScreen extends StatelessWidget {
 
                             Login login = await fetchLogin(email, password);
 
-                            if (login.valid) {
-                              storage.write(key: 'logged', value: 'true');
+                            if (login.accessToken.isNotEmpty) {
+                              storage.write(
+                                  key: 'access_token',
+                                  value: login.accessToken);
                               Navigator.popAndPushNamed(context, '/');
                             }
                           }

@@ -1,7 +1,8 @@
-import 'package:foundee/common/enum/http_status_enum.dart';
-import 'package:foundee/common/env.dart';
-import 'package:foundee/common/http_status_code.dart';
+import 'package:foundee_mobile/common/enum/http_status_enum.dart';
+import 'package:foundee_mobile/common/env.dart';
+import 'package:foundee_mobile/common/http_status_code.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 Future<dynamic> get(String route, String params) async {
   final response = await http.get(
@@ -14,7 +15,7 @@ Future<dynamic> get(String route, String params) async {
   }
 }
 
-Future<dynamic> post(String route, Object body) async {
+Future<Response?> post(String route, Object body) async {
   final response = await http.post(
     Uri.parse("${Environment.url}:${Environment.port}/$route"),
     body: body,
@@ -24,4 +25,6 @@ Future<dynamic> post(String route, Object body) async {
       HttpStatusEnum.success) {
     return response;
   }
+
+  return null;
 }

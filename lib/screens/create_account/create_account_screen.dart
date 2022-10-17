@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:foundee/components/create_field.dart';
-import 'package:foundee/screens/create_account/create_request.dart';
+import 'package:foundee_mobile/components/create_field.dart';
+import 'package:foundee_mobile/extensions/format_date.dart';
 import 'package:intl/intl.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:foundee_mobile/screens/create_account/create_request.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class CreateAccountScreen extends StatelessWidget {
+class CreateAccountScreen extends StatefulWidget {
   CreateAccountScreen({Key? key}) : super(key: key);
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController districtController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController stateController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
+  @override
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
+}
+
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final dateController = TextEditingController();
+  final addressController = TextEditingController();
+  final districtController = TextEditingController();
+  final cityController = TextEditingController();
+  final stateController = TextEditingController();
+  final countryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    @override
+    void initState() {
+      dateController.text = ""; //set the initial value of text field
+      super.initState();
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Create account')),
       body: SingleChildScrollView(
@@ -35,22 +46,28 @@ class CreateAccountScreen extends StatelessWidget {
               createField("Lastame", lastNameController),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: DateTimeField(
+                child: TextField(
                   controller: dateController,
-                  format: DateFormat("yyyy-MM-dd"),
-                  onShowPicker: (context, currentValue) {
-                    return showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1900),
-                      initialDate: currentValue ?? DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                  },
                   decoration: const InputDecoration(
-                    label: Text("Date"),
+                    icon: Icon(Icons.calendar_today),
+                    labelText: "Enter Date",
                     border: OutlineInputBorder(),
-                    helperText: "Enter your date",
                   ),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime.now());
+
+                    if (pickedDate != null) {
+                      setState(() {
+                        dateController.text =
+                            DateFormat('dd/MM/yyyy').format(pickedDate);
+                      });
+                    } else {}
+                  },
                 ),
               ),
               createField("Address", addressController),
@@ -95,12 +112,12 @@ class CreateAccountScreen extends StatelessWidget {
 
   void _createUser() async {
     if (_formKey.currentState!.validate()) {
-      await createUser({
+      final user = await createUser({
         "email": emailController.text,
         "password": passwordController.text,
         "name": nameController.text,
         "lastName": lastNameController.text,
-        "dateBirth": dateController.text,
+        "date": dateController.text.invertDate('/'),
         "address": addressController.text,
         "district": districtController.text,
         "city": cityController.text,
@@ -109,6 +126,18 @@ class CreateAccountScreen extends StatelessWidget {
         "userType": "1",
         "status": "1"
       });
+
+      if (user != null) {
+        Navigator.pushNamed(context, '/login');
+
+        Fluttertoast.showToast(
+            msg: "Successfully created user!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     } else {
       Fluttertoast.showToast(
           msg: "Failed to create the user!",

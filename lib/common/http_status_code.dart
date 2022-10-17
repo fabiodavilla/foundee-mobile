@@ -1,4 +1,4 @@
-import 'package:foundee/common/enum/http_status_enum.dart';
+import 'package:foundee_mobile/common/enum/http_status_enum.dart';
 
 class HttpStatusCode {
   static HttpStatusEnum returnStatusType(int code) {

@@ -1,19 +1,13 @@
 class Login {
-  final bool valid;
-  final bool userFound;
-  final String message;
+  final String accessToken;
 
   const Login({
-    required this.valid,
-    required this.userFound,
-    required this.message,
+    required this.accessToken,
   });
 
   factory Login.fromJson(Map<String, dynamic> json) {
     return Login(
-      valid: json['valid'],
-      userFound: json['userFound'],
-      message: json['message'],
+      accessToken: json['access_token'],
     );
   }
 }

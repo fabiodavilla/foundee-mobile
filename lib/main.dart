@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foundee/screens/add_new_point/add_new_point_screen.dart';
-import 'package:foundee/screens/create_account/create_account_screen.dart';
-import 'package:foundee/screens/login/login_screen.dart';
-import 'package:foundee/screens/main/main_screen.dart';
+import 'package:foundee_mobile/screens/add_new_point/add_new_point_screen.dart';
+import 'package:foundee_mobile/screens/create_account/create_account_screen.dart';
+import 'package:foundee_mobile/screens/login/login_screen.dart';
+import 'package:foundee_mobile/screens/main/main_screen.dart';
 
 void main() {
   runApp(const MyApp());

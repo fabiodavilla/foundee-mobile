@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee/screens/main/map_functions.dart';
-import 'package:foundee/services/geolocation.dart';
+import 'package:foundee_mobile/screens/main/map_functions.dart';
+import 'package:foundee_mobile/services/geolocation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -27,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    storage.read(key: 'logged').then((value) =>
+    storage.read(key: 'access_token').then((value) =>
         {if (value == null) Navigator.pushReplacementNamed(context, '/login')});
 
     _geo
@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
               title: const Text("Logout"),
               leading: const Icon(Icons.logout),
               onTap: () {
-                storage.delete(key: 'logged');
+                storage.delete(key: 'access_token');
                 Navigator.pushReplacementNamed(context, '/login');
               },
             )
@@ -93,13 +93,14 @@ class _MainScreenState extends State<MainScreen> {
                       _onMapChanged(position);
                     },
                   ),
-                  layers: [
-                    TileLayerOptions(
+                  children: [
+                    TileLayer(
                       urlTemplate:
-                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c'],
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      // "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      // subdomains: const ['a', 'b', 'c'],
                     ),
-                    MarkerLayerOptions(
+                    MarkerLayer(
                       markers: [
                         Marker(
                           width: 80.0,
