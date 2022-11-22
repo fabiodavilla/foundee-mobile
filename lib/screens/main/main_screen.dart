@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee_mobile/screens/main/map_functions.dart';
+import 'package:foundee_mobile/common/map/map_functions.dart';
 import 'package:foundee_mobile/services/geolocation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -45,9 +45,11 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onMapChanged(MapPosition position) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _center = position.center;
-      _mapFunctions.loadPoints(position.bounds!);
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _center = position.center;
+        _mapFunctions.loadPoints(position.bounds!);
+      });
     });
   }
 
@@ -97,8 +99,6 @@ class _MainScreenState extends State<MainScreen> {
                     TileLayer(
                       urlTemplate:
                           "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      // "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      // subdomains: const ['a', 'b', 'c'],
                     ),
                     MarkerLayer(
                       markers: [

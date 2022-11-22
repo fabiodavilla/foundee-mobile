@@ -1,9 +1,14 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foundee_mobile/common/map/map_functions.dart';
 import 'package:foundee_mobile/components/create_field.dart';
+import 'package:foundee_mobile/screens/add_new_point/create_request.dart';
+import 'package:foundee_mobile/services/entities/place.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,7 +23,10 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
   final _formKey = GlobalKey<FormState>();
   final List<Widget> _imageList = [];
   final ImagePicker _picker = ImagePicker();
-  List<XFile>? photos;
+  final MapFunctions _mapFunctions = MapFunctions();
+  final List<XFile> _imageFiles = [];
+  LatLng? _center;
+  Timer? _debounce;
 
   final TextEditingController localNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -29,10 +37,21 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
     _imageList.add(addImage(false));
   }
 
+  void _onMapChanged(MapPosition position) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _center = position.center;
+        _mapFunctions.loadPoints(position.bounds!);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final arguments = ModalRoute.of(context)?.settings.arguments as LatLng;
-    final arguments = LatLng(-21.129602, -47.832861);
+    setState(() {
+      _center = ModalRoute.of(context)?.settings.arguments as LatLng;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -53,14 +72,16 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
                         borderRadius: BorderRadius.circular(20),
                         child: FlutterMap(
                           options: MapOptions(
-                            center: arguments,
+                            center: _center,
                             zoom: 15.0,
+                            onPositionChanged: (position, _hasGesture) {
+                              _onMapChanged(position);
+                            },
                           ),
                           children: [
                             TileLayer(
                               urlTemplate:
                                   "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                              // subdomains: ['a', 'b', 'c'],
                             ),
                           ],
                         ),
@@ -84,7 +105,6 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
                         ),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        // itemCount: _imageList.length,
                         itemCount: _imageList.length,
                         itemBuilder: (BuildContext ctx, index) {
                           return Container(
@@ -114,6 +134,8 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
   }
 
   Widget addImage([bool expanded = false]) {
+    List<XFile>? photos;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: InkWell(
@@ -121,15 +143,10 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
           photos = await _picker.pickMultiImage();
 
           if (photos != null) {
-            String message = "Selecionado: ";
-
-            for (XFile element in photos!) {
-              message += element.name + " ";
-            }
-
             setState(() {
               if (photos!.isNotEmpty) {
                 for (XFile photo in photos!) {
+                  _imageFiles.add(photo);
                   _imageList.insert(
                     _imageList.length - 1,
                     SizedBox(
@@ -145,10 +162,10 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () {},
-                            child: const Icon(Icons.clear),
                             style: ElevatedButton.styleFrom(
                               shape: const CircleBorder(),
                             ),
+                            child: const Icon(Icons.clear),
                           )
                         ],
                       ),
@@ -185,5 +202,23 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
     );
   }
 
-  void _addNewPoint() async {}
+  void _addNewPoint() async {
+    List<Image> images = [];
+
+    final Place place = await createPlace({
+      "name": localNameController.text,
+      "description": descriptionController.text,
+      "status": 1,
+      "placeType": 1
+    });
+
+    for (XFile file in _imageFiles) {
+      images.add(Image.file(File(file.path)));
+      var aaa = 1;
+    }
+
+    var b = _center;
+
+    var z = 1;
+  }
 }
