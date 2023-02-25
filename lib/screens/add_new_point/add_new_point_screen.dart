@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foundee_mobile/common/map/map_functions.dart';
 import 'package:foundee_mobile/components/create_field.dart';
 import 'package:foundee_mobile/screens/add_new_point/create_request.dart';
