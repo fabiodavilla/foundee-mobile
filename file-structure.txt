@@ -1,0 +1,43 @@
+* application
+    - entities
+    - repositories
+    - screens
+        # address
+        # cart
+        # checkout
+        # orders
+* config
+    - constants
+        # api_path.dart
+        # assets_path.dart
+        # app_constants.dart
+    - localization
+        # english
+        # spanish
+    - routing
+    - theme
+* core
+    - auth
+    - settings
+        # class to be saved at local storage (no need to be secure)
+    - walkthrough
+* common
+    - components
+        # component1
+        # component2
+    - widgets
+        # widget1
+        # widget2
+* utils
+    - extensions
+    - enum
+    - helpers
+    - services
+        # local_storage_service.dart
+        # secure_storage_service.dart
+        # rest_api_service.dart
+        # native_api_service.dart
+    - ui_utils
+        # animations
+        # app_dialogs.dart
+        # ui_utils.dart

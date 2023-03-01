@@ -1,1 +1,2 @@
-fazer sistema de cadastro
+confirmação de senha
+checar email nos campos

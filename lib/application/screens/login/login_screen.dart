@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee_mobile/screens/login/login_request.dart';
-import 'package:foundee_mobile/services/entities/login.dart';
+import 'package:foundee_mobile/config/constants/assets_path.dart';
+import 'package:foundee_mobile/core/auth/login_functions.dart';
+import 'package:foundee_mobile/application/entities/login.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(36),
                         child: Image(
-                          image: AssetImage("assets/logo_no_text.png"),
+                          image: AssetImage(AssetsPath.LogoNoText),
                         ),
                       ),
                     ),
@@ -135,6 +136,10 @@ class LoginScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(1000),
                           ),
                           child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black54),
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
                             child: const Center(
                               child: Text(
                                 "Criar conta",
@@ -143,10 +148,6 @@ class LoginScreen extends StatelessWidget {
                                   fontSize: 20,
                                 ),
                               ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black54),
-                              borderRadius: BorderRadius.circular(1000),
                             ),
                           ),
                         ),

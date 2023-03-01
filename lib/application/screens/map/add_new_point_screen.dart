@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:foundee_mobile/common/map/map_functions.dart';
-import 'package:foundee_mobile/components/create_field.dart';
-import 'package:foundee_mobile/screens/add_new_point/create_request.dart';
-import 'package:foundee_mobile/services/entities/place.dart';
+import 'package:foundee_mobile/config/constants/assets_path.dart';
+import 'package:foundee_mobile/utils/services/map/map_functions.dart';
+import 'package:foundee_mobile/common/components/create_field.dart';
+import 'package:foundee_mobile/application/repositories/place_repository.dart';
+import 'package:foundee_mobile/application/entities/place.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -29,6 +30,8 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
 
   final TextEditingController localNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+
+  final placeRepository = PlaceRepository();
 
   @override
   void initState() {
@@ -86,7 +89,7 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
                         ),
                       ),
                       const Center(
-                        child: Image(image: AssetImage("assets/pin.png")),
+                        child: Image(image: AssetImage(AssetsPath.Pin)),
                       ),
                     ],
                   ),
@@ -204,12 +207,13 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
   void _addNewPoint() async {
     List<Image> images = [];
 
-    final Place place = await createPlace({
-      "name": localNameController.text,
-      "description": descriptionController.text,
-      "status": 1,
-      "placeType": 1
-    });
+    final Place place = Place(
+        name: localNameController.text,
+        description: descriptionController.text,
+        status: 1,
+        placeType: 1);
+
+    final Place placeResponse = await placeRepository.createPlace(place);
 
     for (XFile file in _imageFiles) {
       images.add(Image.file(File(file.path)));

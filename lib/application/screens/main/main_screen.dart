@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee_mobile/common/map/map_functions.dart';
-import 'package:foundee_mobile/services/geolocation.dart';
+import 'package:foundee_mobile/config/constants/assets_path.dart';
+import 'package:foundee_mobile/utils/services/map/map_functions.dart';
+import 'package:foundee_mobile/utils/services/geolocation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -68,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               child: Center(
                 child: Image(
-                  image: AssetImage("assets/logo_no_text.png"),
+                  image: AssetImage(AssetsPath.LogoNoText),
                 ),
               ),
             ),

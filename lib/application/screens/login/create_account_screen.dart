@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foundee_mobile/components/create_field.dart';
-import 'package:foundee_mobile/extensions/format_date.dart';
+import 'package:foundee_mobile/application/entities/user.dart';
+import 'package:foundee_mobile/application/repositories/user_repository.dart';
+import 'package:foundee_mobile/common/components/create_field.dart';
+import 'package:foundee_mobile/utils/extensions/format_date.dart';
 import 'package:intl/intl.dart';
-import 'package:foundee_mobile/screens/create_account/create_request.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
   final dateController = TextEditingController();
@@ -24,6 +26,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final cityController = TextEditingController();
   final stateController = TextEditingController();
   final countryController = TextEditingController();
+
+  final userRepository = UserRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +46,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             children: [
               createField("Email", emailController),
               createField("Password", passwordController, true),
+              createField("Confirm password", confirmPasswordController, true),
               createField("Name", nameController),
-              createField("Lastame", lastNameController),
+              createField("Last name", lastNameController),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: TextField(
@@ -112,22 +117,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   void _createUser() async {
     if (_formKey.currentState!.validate()) {
-      final user = await createUser({
-        "email": emailController.text,
-        "password": passwordController.text,
-        "name": nameController.text,
-        "lastName": lastNameController.text,
-        "date": dateController.text.invertDate('/'),
-        "address": addressController.text,
-        "district": districtController.text,
-        "city": cityController.text,
-        "state": stateController.text,
-        "country": countryController.text,
-        "userType": "1",
-        "status": "1"
-      });
+      final user = User(
+          name: nameController.text,
+          lastName: lastNameController.text,
+          date: DateTime.parse(dateController.text.invertDate('/')),
+          address: addressController.text,
+          district: districtController.text,
+          city: cityController.text,
+          state: stateController.text,
+          country: countryController.text,
+          userType: 1,
+          status: 1,
+          email: emailController.text,
+          password: passwordController.text);
 
-      if (user != null) {
+      final userResponse = await userRepository.createUser(user);
+
+      if (userResponse != null) {
         Navigator.pushNamed(context, '/login');
 
         Fluttertoast.showToast(
