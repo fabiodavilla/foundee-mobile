@@ -15,7 +15,7 @@ Future<Login> fetchLogin(String email, String password) async {
 
     if (HttpStatusCode.returnStatusType(response.statusCode) ==
         HttpStatusEnum.success) {
-      return Login.fromJson(jsonDecode(response.body));
+      return Login.fromJson(jsonDecode(response.body)['data']);
     }
 
     throw Exception('Failed to login');
