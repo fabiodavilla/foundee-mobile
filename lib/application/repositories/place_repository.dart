@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:foundee_mobile/utils/services/api/api.dart';
-import 'package:foundee_mobile/application/entities/place.dart';
+import 'package:foundee_mobile/application/entities/new_place.dart';
 import 'package:foundee_mobile/application/entities/place_image.dart';
 
 class PlaceRepository extends Api {
-  Future<Place> createPlace(Place place) async {
+  Future<NewPlace> createPlace(NewPlace place) async {
     final response = await postAsync("places", place);
 
     if (response != null) {
-      return Place.fromJson(jsonDecode(response.body));
+      return NewPlace.fromJson(jsonDecode(response.body));
     } else {
       throw NullThrownError();
     }

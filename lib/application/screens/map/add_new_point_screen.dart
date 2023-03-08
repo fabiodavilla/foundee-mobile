@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:foundee_mobile/application/entities/point.dart';
-import 'package:foundee_mobile/application/repositories/point_repository.dart';
+import 'package:foundee_mobile/application/entities/new_place.dart';
 import 'package:foundee_mobile/config/constants/assets_path.dart';
+import 'package:foundee_mobile/utils/helpers/conversions/base64.dart';
 import 'package:foundee_mobile/utils/services/map/map_functions.dart';
 import 'package:foundee_mobile/common/components/create_field.dart';
 import 'package:foundee_mobile/application/repositories/place_repository.dart';
-import 'package:foundee_mobile/application/entities/place.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -33,8 +32,7 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
   final TextEditingController localNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  final placeRepository = PlaceRepository();
-  final pointRepository = PointRepository();
+  final _placeRepository = PlaceRepository();
 
   @override
   void initState() {
@@ -208,26 +206,21 @@ class _AddNewPointScreenState extends State<AddNewPointScreen> {
   }
 
   void _addNewPoint() async {
-    List<Image> images = [];
-
-    final Place place = Place(
-        name: localNameController.text,
-        description: descriptionController.text,
-        status: 1,
-        placeType: 1);
-
-    final Point point = Point(latitude: _center.latitude, longitude: _center.longitude, idUser: idUser, idPlace: idPlace, placeType: placeType)
-
-    final Place placeResponse = await placeRepository.createPlace(place);
-    final Point pointResponse = await pointRepository.createPoint(_center);
+    List<String> imageList = [];
 
     for (XFile file in _imageFiles) {
-      images.add(Image.file(File(file.path)));
-      var aaa = 1;
+      imageList.add(convertToBase64(File(file.path)));
     }
 
-    var b = _center;
+    final NewPlace newPlace = NewPlace(
+        name: localNameController.text,
+        description: descriptionController.text,
+        placeType: 1,
+        latitude: _center!.latitude,
+        longitude: _center!.longitude,
+        imagesStringList: imageList,
+        commercialInfoId: null);
 
-    var z = 1;
+    await _placeRepository.createPlace(newPlace);
   }
 }

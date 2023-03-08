@@ -6,7 +6,6 @@ class NewPlace implements IJsonConvertible {
   final int placeType;
   final double latitude;
   final double longitude;
-  final String idUser;
   final List<String> imagesStringList;
   final String? commercialInfoId;
 
@@ -16,9 +15,17 @@ class NewPlace implements IJsonConvertible {
       required this.placeType,
       required this.latitude,
       required this.longitude,
-      required this.idUser,
       required this.imagesStringList,
       this.commercialInfoId});
+
+  factory NewPlace.fromJson(Map<String, dynamic> json) => NewPlace(
+      name: json['name'],
+      description: json['description'],
+      placeType: json['placeType'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      imagesStringList: json['imagesStringList'] ?? [],
+      commercialInfoId: json['commercialInfoId']);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -28,7 +35,6 @@ class NewPlace implements IJsonConvertible {
         'commercialInfoId': commercialInfoId,
         'latitude': latitude,
         'longitude': longitude,
-        'idUser': idUser,
         'imagesStringList': imagesStringList
       };
 }
