@@ -19,6 +19,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final Geolocation _geo = Geolocation();
   final MapFunctions _mapFunctions = MapFunctions();
+  List<Marker> _markers = [];
   final storage = const FlutterSecureStorage();
 
   LatLng? _center;
@@ -35,6 +36,8 @@ class _MainScreenState extends State<MainScreen> {
         .determinePosition()
         .then(
           (Position value) => setState(() {
+            _markers = _mapFunctions
+                .loadPoints(_mapFunctions.positionToMapPosition(value).bounds!);
             _initialPosition = value;
             _center = LatLng(value.latitude, value.longitude);
           }),
@@ -49,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
     _debounce = Timer(const Duration(milliseconds: 300), () {
       setState(() {
         _center = position.center;
-        _mapFunctions.loadPoints(position.bounds!);
+        _markers = _mapFunctions.loadPoints(position.bounds!);
       });
     });
   }
@@ -102,15 +105,7 @@ class _MainScreenState extends State<MainScreen> {
                           "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     ),
                     MarkerLayer(
-                      markers: [
-                        Marker(
-                          width: 80.0,
-                          height: 80.0,
-                          point: LatLng(_initialPosition!.latitude,
-                              _initialPosition!.longitude),
-                          builder: (ctx) => const FlutterLogo(),
-                        ),
-                      ],
+                      markers: _markers,
                     ),
                   ],
                 ),
