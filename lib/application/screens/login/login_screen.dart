@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:foundee_mobile/config/constants/assets_path.dart';
-import 'package:foundee_mobile/core/auth/login_functions.dart';
 import 'package:foundee_mobile/application/entities/login.dart';
+import 'package:foundee_mobile/config/constants/assets_path.dart';
+import 'package:foundee_mobile/application/repositories/auth_repository.dart';
+import 'package:foundee_mobile/application/entities/auth.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final _authRepository = AuthRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +101,8 @@ class LoginScreen extends StatelessWidget {
                             String email = emailController.text;
                             String password = passwordController.text;
 
-                            Login login = await fetchLogin(email, password);
+                            Auth login = await _authRepository
+                                .fetchLogin(Login(email, password));
 
                             if (login.accessToken.isNotEmpty) {
                               storage.write(

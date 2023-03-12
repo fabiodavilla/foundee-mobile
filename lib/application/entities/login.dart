@@ -1,13 +1,14 @@
-class Login {
-  final String accessToken;
+import 'package:foundee_mobile/utils/helpers/crypt/hash_password.dart';
+import 'package:foundee_mobile/utils/interfaces/i_json_convertible.dart';
 
-  const Login({
-    required this.accessToken,
-  });
+class Login implements IJsonConvertible {
+  final String email;
+  late String password;
 
-  factory Login.fromJson(Map<String, dynamic> json) {
-    return Login(
-      accessToken: json['access_token'],
-    );
+  Login(this.email, String password) {
+    this.password = hashPassword(password);
   }
+
+  @override
+  Map<String, dynamic> toJson() => {'email': email, 'password': password};
 }
