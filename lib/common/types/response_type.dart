@@ -1,8 +1,8 @@
-class ResponseType<T> {
+class ResponseType {
   final bool success;
   final int statusCode;
   final String message;
-  final T data;
+  final dynamic data;
 
   const ResponseType({
     required this.success,

@@ -10,8 +10,10 @@ class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController =
+      TextEditingController(text: "fabio@email.com");
+  final TextEditingController passwordController =
+      TextEditingController(text: "123");
 
   final _authRepository = AuthRepository();
 

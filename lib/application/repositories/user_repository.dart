@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:foundee_mobile/utils/services/api/api.dart';
 import 'package:foundee_mobile/application/entities/user.dart';
 
@@ -10,7 +8,7 @@ class UserRepository extends Api {
     final response = await postAsync("user", user);
 
     if (response != null) {
-      return User.fromJson(jsonDecode(response.body));
+      return User.fromJson(response.data);
     } else {
       throw NullThrownError();
     }

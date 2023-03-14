@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foundee_mobile/application/repositories/point_repository.dart';
 import 'package:foundee_mobile/config/constants/assets_path.dart';
 import 'package:foundee_mobile/utils/services/map/map_functions.dart';
 import 'package:foundee_mobile/utils/services/geolocation.dart';
@@ -21,6 +22,8 @@ class _MainScreenState extends State<MainScreen> {
   final MapFunctions _mapFunctions = MapFunctions();
   List<Marker> _markers = [];
   final storage = const FlutterSecureStorage();
+
+  final _pointRepository = PointRepository();
 
   LatLng? _center;
   Position? _initialPosition;
@@ -49,7 +52,9 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onMapChanged(MapPosition position) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      final x = await _pointRepository.findAllByLocation(position.bounds!.north,
+          position.bounds!.south, position.bounds!.east, position.bounds!.west);
       setState(() {
         _center = position.center;
         _markers = _mapFunctions.loadPoints(position.bounds!);

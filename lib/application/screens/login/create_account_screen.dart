@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  CreateAccountScreen({Key? key}) : super(key: key);
+  const CreateAccountScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
@@ -20,7 +20,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final dateController = TextEditingController();
+  final dateController = TextEditingController(text: "");
   final addressController = TextEditingController();
   final districtController = TextEditingController();
   final cityController = TextEditingController();
@@ -33,7 +33,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget build(BuildContext context) {
     @override
     void initState() {
-      dateController.text = ""; //set the initial value of text field
       super.initState();
     }
 
